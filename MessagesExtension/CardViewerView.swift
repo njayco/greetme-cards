@@ -69,8 +69,8 @@ struct CardViewerView: View {
             VStack(spacing: 16) {
                 header(card)
 
-                CardWebView(url: card.previewPageURL)
-                    .frame(minHeight: 420)
+                CardWebView(url: card.canonicalShareURL, allowScrolling: true)
+                    .frame(minHeight: 520)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)

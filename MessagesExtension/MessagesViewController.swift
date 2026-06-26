@@ -166,9 +166,9 @@ class MessagesViewController: MSMessagesAppViewController {
                         print("Failed to insert GreetMe message: \(error.localizedDescription)")
                         return
                     }
-                    // Return to the conversation with the card in the compose field;
-                    // user taps the blue send button in Messages to deliver it.
-                    self.dismiss()
+                    // Collapse the extension to compact so the card appears in the
+                    // compose field and the user taps the blue send button in Messages.
+                    self.requestPresentationStyle(.compact)
                 }
             }
         }

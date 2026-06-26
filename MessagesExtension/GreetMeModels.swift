@@ -86,6 +86,9 @@ struct GreetMeCardPayload: Decodable {
     let hasVoiceNote: Bool
     let hasCashGift: Bool
 
+    // Server may return the uploaded voice note URL so the preview can play it.
+    let voiceNoteUrl: String?
+
     // Present only on the create response.
     let requiresPayment: Bool?
     let checkoutUrl: String?

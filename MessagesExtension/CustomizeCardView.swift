@@ -43,6 +43,7 @@ struct CustomizeCardView: View {
     @State private var errorMessage: String?
     @State private var showPreview = false
     @State private var previewPayload: GreetMeCardPayload?
+    @State private var showYouTubePreviewSheet = false
 
     private let api = GreetMeAPIClient()
     private let cashPresets = [5, 10, 15, 20, 25, 50]
@@ -78,11 +79,19 @@ struct CustomizeCardView: View {
             if let payload = previewPayload {
                 CardSendPreviewView(
                     payload: payload,
+                    localVoiceNoteURL: recorder.recordedURL,
+                    youtubeVideoId: parseYouTube()?.videoId,
+                    youtubeStartSeconds: parseYouTube()?.startSeconds ?? 0,
                     onSend: onSend,
                     onEdit: { showPreview = false },
                     onOpenURL: onOpenURL
                 )
             }
+        }
+        .sheet(isPresented: $showYouTubePreviewSheet) {
+            let videoId = Self.extractVideoId(from: youtubeLink.trimmingCharacters(in: .whitespaces)) ?? ""
+            let start = Int(clipStartSeconds.trimmingCharacters(in: .whitespaces)) ?? 0
+            YouTubePreviewSheet(videoId: videoId, startSeconds: start)
         }
         .onChange(of: recorder.recordedURL) { newURL in
             if let url = newURL { uploadVoice(url) }
@@ -305,9 +314,9 @@ struct CustomizeCardView: View {
                         }
                     }
                     Spacer()
-                    if let url = URL(string: youtubeLink.trimmingCharacters(in: .whitespaces)) {
+                    if Self.extractVideoId(from: youtubeLink.trimmingCharacters(in: .whitespaces)) != nil {
                         Button {
-                            onOpenURL(url)
+                            showYouTubePreviewSheet = true
                         } label: {
                             Label("Preview", systemImage: "play.rectangle.fill")
                                 .font(.caption.weight(.semibold))
